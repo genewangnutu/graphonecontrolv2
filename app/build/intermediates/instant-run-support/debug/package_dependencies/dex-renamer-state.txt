@@ -1,0 +1,16 @@
+#Tue Oct 03 13:10:58 CST 2017
+renamed.4=classes.dex
+renamed.3=classes5.dex
+renamed.2=classes3.dex
+renamed.1=classes4.dex
+base.4=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_1ffd35f83702db03b666ae7bc2b82050b607b443
+renamed.0=classes2.dex
+base.3=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-annotations-23.0.1_30988f1fe36b09fe750ef342667175c0af8e1dc8
+base.2=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_c92d6bbd0096289b0a46f0006d310fffa4cee88a
+base.1=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\internal_impl-23.0.1_30c8327d24a34f5951cb1ee7796879754269afb2
+base.0=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_a74140c55073b1afd85ad24ed482a8c7e0e80912
+file.4=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_1ffd35f83702db03b666ae7bc2b82050b607b443\\classes.dex
+file.3=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-annotations-23.0.1_30988f1fe36b09fe750ef342667175c0af8e1dc8\\classes.dex
+file.2=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_c92d6bbd0096289b0a46f0006d310fffa4cee88a\\classes.dex
+file.1=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\internal_impl-23.0.1_30c8327d24a34f5951cb1ee7796879754269afb2\\classes.dex
+file.0=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_a74140c55073b1afd85ad24ed482a8c7e0e80912\\classes.dex

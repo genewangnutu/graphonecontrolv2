@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="D:\android-sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="D:\android studio\graphonecontrolv2\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.0.1_30988f1fe36b09fe750ef342667175c0af8e1dc8\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\android studio\graphonecontrolv2\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="48299f7c38c30043501d578c63058f52adc1c892">
+        <dex dex="D:\android studio\graphonecontrolv2\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_b09e2ad62a411ecd70710ce6001f138601e6095a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\android studio\DeviceScanActivity_original\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="D:\android studio\DeviceScanActivity_original\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_92e76d38ff415b121328f42774f85cd918221fd2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\android studio\DeviceScanActivity_original\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="9a5f9b57731f641630c6c58d83cfcf57b5086717">
+        <dex dex="D:\android studio\DeviceScanActivity_original\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_8e56886ecd3ee7776800e3ed6fed21016c7eed78\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\android studio\graphonecontrolv2\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="D:\android studio\graphonecontrolv2\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_0a57646c86c2404c4351eaecf2c4f4d11c338ae4\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\user\.android\build-cache\438442c62d20917646405e209326da5674f67136\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
+        <dex dex="D:\android studio\graphonecontrolv2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1ffd35f83702db03b666ae7bc2b82050b607b443\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\user\.android\build-cache\f5ac6d4c5b56fddc6a9e9223b7c113de43a45347\output\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="D:\android studio\graphonecontrolv2\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.0.1_30c8327d24a34f5951cb1ee7796879754269afb2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\user\.android\build-cache\9176cc75d3ec7f55b74697fd44514034779d3387\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="D:\android studio\graphonecontrolv2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a74140c55073b1afd85ad24ed482a8c7e0e80912\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\user\.android\build-cache\f5ac6d4c5b56fddc6a9e9223b7c113de43a45347\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="D:\android studio\graphonecontrolv2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c92d6bbd0096289b0a46f0006d310fffa4cee88a\classes.dex" />
+    </item>
+
+</items>

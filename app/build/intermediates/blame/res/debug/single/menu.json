@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\gatt_services.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\gatt_services.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_simple_tabs.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_simple_tabs.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_custom_view_icon_text_tabs.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_custom_view_icon_text_tabs.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_scrollable_tabs.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_scrollable_tabs.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_pinned_top_tabs.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_pinned_top_tabs.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_icon_text_tabs.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_icon_text_tabs.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_main2.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_main2.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_main.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_main.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_icon_tabs.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\menu_icon_tabs.xml"
+    },
+    {
+        "merged": "D:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\res\\merged\\debug\\menu\\gatt_scan.xml",
+        "source": "D:\\android studio\\graphonecontrolv2\\app\\src\\main\\res\\menu\\gatt_scan.xml"
+    }
+]
