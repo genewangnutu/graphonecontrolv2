@@ -1,7 +1,0 @@
-#Tue Oct 03 13:11:01 CST 2017
-base.0=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_0a57646c86c2404c4351eaecf2c4f4d11c338ae4
-renamed.1=classes.dex
-renamed.0=classes2.dex
-file.1=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_b09e2ad62a411ecd70710ce6001f138601e6095a\\classes.dex
-base.1=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_b09e2ad62a411ecd70710ce6001f138601e6095a
-file.0=D\:\\android studio\\graphonecontrolv2\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_0a57646c86c2404c4351eaecf2c4f4d11c338ae4\\classes.dex

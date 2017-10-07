@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ import java.util.List;
 import sample.ble.sensortag.two.R;
 import scrollmenu.materialtabs.fragments.*;
 import sample.ble.sensortag.BleService;
+import com.devadvance.circularseekbar.CircularSeekBar;
 
 public class SimpleTabsActivity extends AppCompatActivity {
 
@@ -35,11 +39,15 @@ public class SimpleTabsActivity extends AppCompatActivity {
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
-    public BleService bleService;
+    public static BleService bleService;
     private String deviceAddress;
 
-    public static TextView address,state,communicate,test;
+    public static TextView address,state,communicate,test,m1t,m2t,m3t;
+    public static Button m1button,m2button,m3button;
+    public static int test_value=0;
     public static String s_address,s_state,s_communicate,s_testvalue;
+    public static CircularSeekBar cbar;
+    public static boolean mode_b01=false,mode_b02=false,mode_b03=false;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -130,7 +138,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        s_address=" ";s_state="Disconnected";s_communicate=" ";s_testvalue=""+0;
+        s_address=" ";s_state="Disconnected";s_communicate=" ";s_testvalue=""+0;test_value=0;
         ble_init();
     }
 
@@ -162,6 +170,10 @@ public class SimpleTabsActivity extends AppCompatActivity {
         super.onDestroy();
         unbindService(serviceConnection);
         bleService = null;
+
+        mode_b01=false;
+        mode_b02=false;
+        mode_b03=false;
     }
 
     @Override
