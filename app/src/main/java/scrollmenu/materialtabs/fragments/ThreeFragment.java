@@ -55,6 +55,8 @@ public class ThreeFragment extends Fragment{
                     SimpleTabsActivity.mode_b01=!SimpleTabsActivity.mode_b01;
                     mHandler.sendEmptyMessage(2);
 
+                    byte [] send={(byte)0x21,0x00};
+                    SimpleTabsActivity.bleService.write_board(send,1);
                 }else{
                     SimpleTabsActivity.mode_b01=!SimpleTabsActivity.mode_b01;
                     SimpleTabsActivity.mode_b02=false;
@@ -100,6 +102,8 @@ public class ThreeFragment extends Fragment{
             super.run();
 
             Date dt1=new Date(),dt2=new Date();
+            byte [] send={(byte)0xa1};
+            SimpleTabsActivity.bleService.write_board(send,1);
 
             while(SimpleTabsActivity.mode_b01){
                 min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
@@ -108,7 +112,7 @@ public class ThreeFragment extends Fragment{
 
                 //15min atfer
                 if(dt2.getTime()-dt1.getTime()>=900000){
-                    byte [] send={(byte)0xb1};
+                    send[0]=(byte)0xb1;
                     SimpleTabsActivity.bleService.write_board(send,1);
                     time_string=min+":"+sec+" "+" 65%";
                     mHandler.sendEmptyMessage(0);

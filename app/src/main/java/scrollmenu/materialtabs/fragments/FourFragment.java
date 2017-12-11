@@ -24,7 +24,8 @@ public class FourFragment extends Fragment{
     private final static String TAG=FourFragment.class.getName();
     private static int min=0;
     private static int sec=0;
-    private static String time_string;
+    private static String time_string,progress_str=" 99%";
+    private static boolean mode2_lock=false;
     public FourFragment() {
         // Required empty public constructor
     }
@@ -56,6 +57,8 @@ public class FourFragment extends Fragment{
                     SimpleTabsActivity.mode_b02=!SimpleTabsActivity.mode_b02;
                     mHandler.sendEmptyMessage(2);
 
+                    byte [] send={(byte)0x21,0x00};
+                    SimpleTabsActivity.bleService.write_board(send,1);
                 }else{
                     SimpleTabsActivity.mode_b02=!SimpleTabsActivity.mode_b02;
                     SimpleTabsActivity.mode_b01=false;
@@ -101,26 +104,37 @@ public class FourFragment extends Fragment{
             super.run();
 
             Date dt1=new Date(),dt2=new Date();
+            byte [] send={(byte)0xa2};
+            SimpleTabsActivity.bleService.write_board(send,1);
 
             while(SimpleTabsActivity.mode_b02){
                 min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
                 sec=((int)(dt2.getTime()-dt1.getTime())/1000)%60;
                 dt2=new Date();
+                time_string=min+":"+sec+" "+progress_str;
+                mHandler.sendEmptyMessage(0);
 
                 //15min atfer
                 if(dt2.getTime()-dt1.getTime()>=900000){
-                    byte [] send={(byte)0xb1};
-                    SimpleTabsActivity.bleService.write_board(send,1);
-                    time_string=min+":"+sec+" "+" 65%";
-                    mHandler.sendEmptyMessage(0);
-                }
-                else{
-                    time_string=min+":"+sec+" "+" 99%";
-                    mHandler.sendEmptyMessage(0);
+                    dt1=new Date();
+                    dt2=new Date();
+
+                    mode2_lock=!mode2_lock;
+                    if(mode2_lock){
+                        send[0]=(byte)0xb2;
+                        SimpleTabsActivity.bleService.write_board(send,1);
+
+                        progress_str=" 5%";
+                    }else{
+                        send[0]=(byte)0xa2;
+                        SimpleTabsActivity.bleService.write_board(send,1);
+
+                        progress_str=" 99%";
+                    }
                 }
 
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(12);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

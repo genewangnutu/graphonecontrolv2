@@ -57,8 +57,12 @@ public class TwoFragment extends Fragment{
                     SimpleTabsActivity.mode_b01=false;
                     SimpleTabsActivity.mode_b02=false;
                     SimpleTabsActivity.mode_b03=false;
+
+                    SimpleTabsActivity.test_value=SimpleTabsActivity.cbar.getProgress();
+                    byte [] s={0x21,(byte) ((int) SimpleTabsActivity.test_value/16)};
+                    SimpleTabsActivity.bleService.write_board(s,1);
                 }
-                SimpleTabsActivity.test_value=SimpleTabsActivity.cbar.getProgress();
+
                 mHandler.sendEmptyMessage(0);
 
 
