@@ -304,6 +304,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
                 }*/
                 all=all+result.get(0).toString();
                 vocal_verify(all);
+
             }
         }
     }
