@@ -22,9 +22,7 @@ import scrollmenu.materialtabs.activity.SimpleTabsActivity;
  * */
 public class ThreeFragment extends Fragment{
     private final static String TAG=ThreeFragment.class.getName();
-    private static int min=0;
-    private static int sec=0;
-    private static String time_string;
+    public static boolean view_lock=false;
     public ThreeFragment() {
         // Required empty public constructor
     }
@@ -43,6 +41,9 @@ public class ThreeFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.i(TAG,"ThreeFragment onViewCreated");
+        view_lock=true;
+        //FourFragment.view_lock=FiveFragment.view_lock=false;
         init();
     }
     private void init(){
@@ -63,26 +64,28 @@ public class ThreeFragment extends Fragment{
                     SimpleTabsActivity.mode_b03=false;
 
                     mHandler.sendEmptyMessage(1);
-                    mode1 m1=new mode1();
-                    m1.start();
+                    SimpleTabsActivity.front_mode1 fm1=new SimpleTabsActivity.front_mode1();
+                    fm1.start();
                 }
             }
         });
-        if(SimpleTabsActivity.mode_b01){
+        if(SimpleTabsActivity.mode_b01 ){
             //true
+
             mHandler.sendEmptyMessage(1);
-        }else{
+        }
+        else{
             //false
             mHandler.sendEmptyMessage(2);
         }
     }
-    private Handler mHandler = new Handler() {
+    public static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch(msg.what){
                 case 0:
-                    SimpleTabsActivity.m1t.setText(time_string);
+                    SimpleTabsActivity.m1t.setText(SimpleTabsActivity.time_string);
                     break;
                 case 1:
                     SimpleTabsActivity.m1button.setText("STOP");
@@ -101,24 +104,30 @@ public class ThreeFragment extends Fragment{
         public void run() {
             super.run();
 
-            Date dt1=new Date(),dt2=new Date();
-            byte [] send={(byte)0xa1};
-            SimpleTabsActivity.bleService.write_board(send,1);
+            if(SimpleTabsActivity.forntmode_b01){
+                //switch & close front thread
+                SimpleTabsActivity.forntmode_b01=false;
+            }else{
+                SimpleTabsActivity.dt1=new Date();SimpleTabsActivity.dt2=new Date();
+                SimpleTabsActivity.send[0]=(byte)0xa1;
+                SimpleTabsActivity.bleService.write_board(SimpleTabsActivity.send,1);
+            }
+
 
             while(SimpleTabsActivity.mode_b01){
-                min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
-                sec=((int)(dt2.getTime()-dt1.getTime())/1000)%60;
-                dt2=new Date();
+                SimpleTabsActivity.min=((int)(SimpleTabsActivity.dt2.getTime()-SimpleTabsActivity.dt1.getTime())/1000)/60;
+                SimpleTabsActivity.sec=((int)(SimpleTabsActivity.dt2.getTime()-SimpleTabsActivity.dt1.getTime())/1000)%60;
+                SimpleTabsActivity.dt2=new Date();
 
                 //15min atfer
-                if(dt2.getTime()-dt1.getTime()>=900000){
-                    send[0]=(byte)0xb1;
-                    SimpleTabsActivity.bleService.write_board(send,1);
-                    time_string=min+":"+sec+" "+" 65%";
+                if(SimpleTabsActivity.dt2.getTime()-SimpleTabsActivity.dt1.getTime()>=900000){
+                    SimpleTabsActivity.send[0]=(byte)0xb1;
+                    SimpleTabsActivity.bleService.write_board(SimpleTabsActivity.send,1);
+                    SimpleTabsActivity.time_string=SimpleTabsActivity.min+":"+SimpleTabsActivity.sec+" "+" 65%";
                     mHandler.sendEmptyMessage(0);
                 }
                 else{
-                    time_string=min+":"+sec+" "+" 99%";
+                    SimpleTabsActivity.time_string=SimpleTabsActivity.min+":"+SimpleTabsActivity.sec+" "+" 99%";
                     mHandler.sendEmptyMessage(0);
                 }
 

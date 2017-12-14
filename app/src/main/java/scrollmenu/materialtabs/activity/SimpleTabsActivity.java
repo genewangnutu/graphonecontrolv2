@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,11 +19,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import sample.ble.sensortag.two.R;
@@ -47,7 +51,16 @@ public class SimpleTabsActivity extends AppCompatActivity {
     public static int test_value=0;
     public static String s_address,s_state,s_communicate,s_testvalue;
     public static CircularSeekBar cbar;
-    public static boolean mode_b01=false,mode_b02=false,mode_b03=false;
+    public static boolean mode_b01=false,mode_b02=false,mode_b03=false,
+            forntmode_b01=false,forntmode_b02=false,forntmode_b03=false;
+
+    public static Date dt1 , dt2 ;
+    public static String time_string;
+    public static int min=0;
+    public static int sec=0;
+    public static byte[] send= new byte[5];
+    public static String progress_str=" 99%";
+    public static boolean mode2_lock=false;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -190,6 +203,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
         adapter.addFragment(new ThreeFragment(), "MODE 1");
         adapter.addFragment(new FourFragment(), "MODE 2");
         adapter.addFragment(new FiveFragment(), "MODE 3");
+        //adapter.addFragment(new SixFragment(), "VOCAL CONTROL");
         viewPager.setAdapter(adapter);
     }
 
@@ -219,6 +233,231 @@ public class SimpleTabsActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+    }
+
+    public void switch_mode(int mode){
+
+    }
+
+    private void vocal_verify(String vocal){
+        if(vocal.indexOf("開啟")!=-1 || vocal.indexOf("模式")!=-1){
+            if(vocal.indexOf("模式1")!=-1){
+                mode_b02=mode_b03=false;
+
+                if(mode_b01){
+                    Toast.makeText(getApplicationContext(),"模式已開啟",Toast.LENGTH_SHORT).show();
+                }else{
+                    mode_b01=true;
+                    front_mode1 fm1=new front_mode1();
+                    fm1.start();
+                    Toast.makeText(getApplicationContext(),"開啟模式1",Toast.LENGTH_SHORT).show();
+                }
+            }else if(vocal.indexOf("模式2")!=-1){
+                mode_b01=mode_b03=false;
+
+                if(mode_b02){
+                    Toast.makeText(getApplicationContext(),"模式已開啟",Toast.LENGTH_SHORT).show();
+                }else{
+                    mode_b02=true;
+                    front_mode2 fm2=new front_mode2();
+                    fm2.start();
+                    Toast.makeText(getApplicationContext(),"開啟模式2",Toast.LENGTH_SHORT).show();
+                }
+            }else if(vocal.indexOf("模式3")!=-1){
+                mode_b01=mode_b02=false;
+
+                if(mode_b03){
+                    Toast.makeText(getApplicationContext(),"模式已開啟",Toast.LENGTH_SHORT).show();
+                }else{
+                    mode_b03=true;
+                    front_mode3 fm3=new front_mode3();
+                    fm3.start();
+                    Toast.makeText(getApplicationContext(),"開啟模式3",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        else if(vocal.indexOf("關閉")!=-1 || vocal.indexOf("關掉")!=-1){
+            if(vocal.indexOf("模式1")!=-1){
+                mode_b01=false;
+                Toast.makeText(getApplicationContext(),"關閉模式1",Toast.LENGTH_SHORT).show();
+            }else if(vocal.indexOf("模式2")!=-1){
+                mode_b02=false;
+                Toast.makeText(getApplicationContext(),"關閉模式2",Toast.LENGTH_SHORT).show();
+            }else if(vocal.indexOf("模式3")!=-1){
+                mode_b03=false;
+                Toast.makeText(getApplicationContext(),"關閉模式3",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                //把所有辨識的可能結果印出來看一看，第一筆是最 match 的。
+                ArrayList result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                String all = "";
+                /*for (Object r : result) {
+                    all = all + r.toString() + "\n";
+                }*/
+                all=all+result.get(0).toString();
+                vocal_verify(all);
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "請說話..."); //語音辨識 Dialog 上要顯示的提示文字
+
+            startActivityForResult(intent, 1);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public static class front_mode1 extends Thread {
+        @Override
+        public void run() {
+            super.run();
+
+            dt1 = new Date(); dt2 = new Date();
+            send[0] = (byte) 0xa1;
+            bleService.write_board(send, 1);
+
+            while (mode_b01) {
+                min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
+                sec=((int)(dt2.getTime()-dt1.getTime())/1000)%60;
+                dt2 = new Date();
+
+                //15min atfer
+                if (dt2.getTime() - dt1.getTime() >= 900000) {
+                    send[0] = (byte) 0xb1;
+                    bleService.write_board(send, 1);
+                    time_string=min+":"+sec+" "+" 65%";
+                    if(ThreeFragment.view_lock)
+                        ThreeFragment.mHandler.sendEmptyMessage(0);
+                } else {
+                    time_string=min+":"+sec+" "+" 99%";
+                    if(ThreeFragment.view_lock)
+                        ThreeFragment.mHandler.sendEmptyMessage(0);
+                }
+
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            if(ThreeFragment.view_lock)
+                ThreeFragment.mHandler.sendEmptyMessage(2);
+            Log.d(TAG, "--front_mode1 Thread stop--");
+        }
+    }
+
+    public static class front_mode2 extends Thread{
+        @Override
+        public void run() {
+            super.run();
+
+            dt1=new Date();dt2=new Date();
+            send[0]=(byte)0xa2;
+            SimpleTabsActivity.bleService.write_board(send,1);
+
+            while(mode_b02){
+                min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
+                sec=((int)(dt2.getTime()-dt1.getTime())/1000)%60;
+                dt2=new Date();
+                time_string=min+":"+sec+" "+progress_str;
+                if(FourFragment.view_lock)
+                    FourFragment.mHandler.sendEmptyMessage(0);
+
+                //15min atfer
+                if(dt2.getTime()-dt1.getTime()>=900000){
+                    dt1=new Date();
+                    dt2=new Date();
+
+                    mode2_lock=!mode2_lock;
+                    if(mode2_lock){
+                        send[0]=(byte)0xb2;
+                        bleService.write_board(send,1);
+
+                        progress_str=" 5%";
+                    }else{
+                        send[0]=(byte)0xa2;
+                        bleService.write_board(send,1);
+
+                        progress_str=" 99%";
+                    }
+                }
+
+                try {
+                    Thread.sleep(7);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            if(FourFragment.view_lock)
+                FourFragment.mHandler.sendEmptyMessage(2);
+            Log.d(TAG, "--front_mode2 Thread stop--");
+        }
+    }
+
+    public static class front_mode3 extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            dt1=new Date();dt2=new Date();
+            send[0]=(byte) 0xa3;
+            bleService.write_board(send,1);
+
+            while(mode_b03){
+                min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
+                sec=((int)(dt2.getTime()-dt1.getTime())/1000)%60;
+                dt2=new Date();
+
+                //5min atfer
+                if(dt2.getTime()-dt1.getTime()>=300000){
+                    send[0]=(byte)0xb3;
+                    bleService.write_board(send,1);
+
+                    time_string=min+":"+sec+" "+" 65%";
+                }else{
+                    time_string=min+":"+sec+" "+" 99%";
+                }
+                if(FiveFragment.view_lock)
+                    FiveFragment.mHandler.sendEmptyMessage(0);
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

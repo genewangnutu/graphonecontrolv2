@@ -22,10 +22,7 @@ import scrollmenu.materialtabs.activity.SimpleTabsActivity;
  * */
 public class FourFragment extends Fragment{
     private final static String TAG=FourFragment.class.getName();
-    private static int min=0;
-    private static int sec=0;
-    private static String time_string,progress_str=" 99%";
-    private static boolean mode2_lock=false;
+    public static boolean view_lock=false;
     public FourFragment() {
         // Required empty public constructor
     }
@@ -45,6 +42,9 @@ public class FourFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.i(TAG,"FourFragment onViewCreated");
+        view_lock=true;
+        //ThreeFragment.view_lock=FiveFragment.view_lock=false;
         init();
     }
     private void init(){
@@ -65,26 +65,27 @@ public class FourFragment extends Fragment{
                     SimpleTabsActivity.mode_b03=false;
 
                     mHandler.sendEmptyMessage(1);
-                    mode2 m2=new mode2();
-                    m2.start();
+                    SimpleTabsActivity.front_mode2 fm2=new SimpleTabsActivity.front_mode2();
+                    fm2.start();
                 }
             }
         });
         if(SimpleTabsActivity.mode_b02){
             //true
             mHandler.sendEmptyMessage(1);
-        }else{
+        }
+        else{
             //false
             mHandler.sendEmptyMessage(2);
         }
     }
-    private Handler mHandler = new Handler() {
+    public static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch(msg.what){
                 case 0:
-                    SimpleTabsActivity.m2t.setText(time_string);
+                    SimpleTabsActivity.m2t.setText(SimpleTabsActivity.time_string);
                     break;
                 case 1:
                     SimpleTabsActivity.m2button.setText("STOP");
@@ -102,34 +103,39 @@ public class FourFragment extends Fragment{
         @Override
         public void run() {
             super.run();
+            if(SimpleTabsActivity.forntmode_b02){
+                //switch & close front thread
+                SimpleTabsActivity.forntmode_b02=false;
+            }else{
+                SimpleTabsActivity.dt1=new Date();SimpleTabsActivity.dt2=new Date();
+                SimpleTabsActivity.send[0]=(byte)0xa2;
+                SimpleTabsActivity.bleService.write_board(SimpleTabsActivity.send,1);
+            }
 
-            Date dt1=new Date(),dt2=new Date();
-            byte [] send={(byte)0xa2};
-            SimpleTabsActivity.bleService.write_board(send,1);
 
             while(SimpleTabsActivity.mode_b02){
-                min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
-                sec=((int)(dt2.getTime()-dt1.getTime())/1000)%60;
-                dt2=new Date();
-                time_string=min+":"+sec+" "+progress_str;
+                SimpleTabsActivity.min=((int)(SimpleTabsActivity.dt2.getTime()-SimpleTabsActivity.dt1.getTime())/1000)/60;
+                SimpleTabsActivity.sec=((int)(SimpleTabsActivity.dt2.getTime()-SimpleTabsActivity.dt1.getTime())/1000)%60;
+                SimpleTabsActivity.dt2=new Date();
+                SimpleTabsActivity.time_string=SimpleTabsActivity.min+":"+SimpleTabsActivity.sec+" "+SimpleTabsActivity.progress_str;
                 mHandler.sendEmptyMessage(0);
 
                 //15min atfer
-                if(dt2.getTime()-dt1.getTime()>=900000){
-                    dt1=new Date();
-                    dt2=new Date();
+                if(SimpleTabsActivity.dt2.getTime()-SimpleTabsActivity.dt1.getTime()>=900000){
+                    SimpleTabsActivity.dt1=new Date();
+                    SimpleTabsActivity.dt2=new Date();
 
-                    mode2_lock=!mode2_lock;
-                    if(mode2_lock){
-                        send[0]=(byte)0xb2;
-                        SimpleTabsActivity.bleService.write_board(send,1);
+                    SimpleTabsActivity.mode2_lock=!SimpleTabsActivity.mode2_lock;
+                    if(SimpleTabsActivity.mode2_lock){
+                        SimpleTabsActivity.send[0]=(byte)0xb2;
+                        SimpleTabsActivity.bleService.write_board(SimpleTabsActivity.send,1);
 
-                        progress_str=" 5%";
+                        SimpleTabsActivity.progress_str=" 5%";
                     }else{
-                        send[0]=(byte)0xa2;
-                        SimpleTabsActivity.bleService.write_board(send,1);
+                        SimpleTabsActivity.send[0]=(byte)0xa2;
+                        SimpleTabsActivity.bleService.write_board(SimpleTabsActivity.send,1);
 
-                        progress_str=" 99%";
+                        SimpleTabsActivity.progress_str=" 99%";
                     }
                 }
 

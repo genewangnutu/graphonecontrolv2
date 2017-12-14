@@ -23,6 +23,7 @@ public class FiveFragment extends Fragment{
     private static int min=0;
     private static int sec=0;
     private static String time_string;
+    public static boolean view_lock=false;
     public FiveFragment() {
         // Required empty public constructor
     }
@@ -42,6 +43,8 @@ public class FiveFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        view_lock=true;
+        //ThreeFragment.view_lock=FourFragment.view_lock=false;
         init();
     }
 
@@ -63,8 +66,8 @@ public class FiveFragment extends Fragment{
                     SimpleTabsActivity.mode_b01=false;
 
                     mHandler.sendEmptyMessage(1);
-                    mode3 m3=new mode3();
-                    m3.start();
+                    SimpleTabsActivity.front_mode3 fm3=new SimpleTabsActivity.front_mode3();
+                    fm3.start();
                 }
             }
         });
@@ -76,13 +79,13 @@ public class FiveFragment extends Fragment{
             mHandler.sendEmptyMessage(2);
         }
     }
-    private Handler mHandler = new Handler() {
+    public static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch(msg.what){
                 case 0:
-                    SimpleTabsActivity.m3t.setText(time_string);
+                    SimpleTabsActivity.m3t.setText(SimpleTabsActivity.time_string);
                     break;
                 case 1:
                     SimpleTabsActivity.m3button.setText("STOP");
