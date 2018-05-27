@@ -17,6 +17,7 @@
 package sample.ble.sensortag;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -24,6 +25,11 @@ import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,11 +43,13 @@ import android.widget.Toast;
 import sample.ble.sensortag.adapters.BleDevicesAdapter;
 import sample.ble.sensortag.two.R;
 import scrollmenu.materialtabs.activity.SimpleTabsActivity;
+
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
+@SuppressLint("NewApi")
 public class DeviceScanActivity extends ListActivity {
-	private final static String TAG = DeviceScanActivity.class.getSimpleName();
+    private final static String TAG = DeviceScanActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1;
     private static final long SCAN_PERIOD = 500;
 
@@ -100,7 +108,7 @@ public class DeviceScanActivity extends ListActivity {
             case R.id.menu_scan:
                 leDeviceListAdapter.clear();
                 if (scanner == null) {
-                    scanner = new Scanner(bluetoothAdapter, mLeScanCallback);
+                    scanner = new Scanner(bluetoothAdapter.getBluetoothLeScanner(), scanCallback);
                     scanner.startScanning();
 
                     invalidateOptionsMenu();
@@ -119,7 +127,7 @@ public class DeviceScanActivity extends ListActivity {
     }
 
     @SuppressLint("ShowToast")
-	@Override
+    @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "im back");
@@ -130,7 +138,7 @@ public class DeviceScanActivity extends ListActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             return;
         }
-        
+
 
         init();
     }
@@ -166,8 +174,8 @@ public class DeviceScanActivity extends ListActivity {
         int xx=position;
         Toast.makeText(this, "position="+xx, Toast.LENGTH_SHORT).show();
         final Intent intent = new Intent(this, SimpleTabsActivity.class);
-        intent.putExtra(SimpleTabsActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(SimpleTabsActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        intent.putExtra(DeviceServicesActivity.EXTRAS_DEVICE_NAME, device.getName());
+        intent.putExtra(DeviceServicesActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         startActivity(intent);
     }
 
@@ -178,42 +186,75 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         if (scanner == null) {
-            scanner = new Scanner(bluetoothAdapter, mLeScanCallback);
+            scanner = new Scanner(bluetoothAdapter.getBluetoothLeScanner(), scanCallback);
             scanner.startScanning();
         }
 
         invalidateOptionsMenu();
     }
 
-    // Device scan callback.
+    // Device scan callback. API 21 before
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
-    			
+
                 @SuppressLint("NewApi")
-				@Override
+                @Override
                 public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             leDeviceListAdapter.addDevice(device, rssi);
                             leDeviceListAdapter.notifyDataSetChanged();
-                            //String gg=new String(scanRecord, StandardCharsets.UTF_8);
-                            /*if(device.getAddress().equals("A0:E6:F8:34:60:77"))
-                            	Log.d(TAG, "A0:E6:F8:34:60:77 "+scanRecord[0]+" "+scanRecord[1]+" "+scanRecord[2]);*/
+                            Log.d(TAG, device.getAddress()+"");
                         }
                     });
                 }
             };
+    // Device scan callback. API 21 after
+    private ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult scanResult) {
+            //BluetoothDevice device = scanResult.getDevice();
+            //int rssi=scanResult.getRssi();
+            leDeviceListAdapter.addDevice(scanResult.getDevice(), scanResult.getRssi());
+            leDeviceListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onScanFailed(int i) {
+            Log.e(TAG, "Scan attempt failed");
+        }
+    };
 
     private static class Scanner extends Thread {
-        private final BluetoothAdapter bluetoothAdapter;
-        private final BluetoothAdapter.LeScanCallback mLeScanCallback;
+        private BluetoothAdapter bluetoothAdapter=null;
+        private BluetoothLeScanner bluetoothLeScanner=null;
+        private final ScanCallback scanCallback;
 
         private volatile boolean isScanning = false;
 
-        Scanner(BluetoothAdapter adapter, BluetoothAdapter.LeScanCallback callback) {
+        private ScanFilter.Builder builder;
+        private Vector<ScanFilter> filter;
+        private ScanSettings.Builder builderScanSettings;
+
+
+        Scanner(BluetoothAdapter adapter, ScanCallback callback) {
             bluetoothAdapter = adapter;
-            mLeScanCallback = callback;
+            scanCallback = callback;
+        }
+        Scanner(BluetoothLeScanner LeScanner, ScanCallback callback) {
+            bluetoothLeScanner=LeScanner;
+            scanCallback = callback;
+
+            builder = new ScanFilter.Builder();
+            filter = new Vector<ScanFilter>();
+            filter.add(builder.build());
+            builderScanSettings= new ScanSettings.Builder();
+            builderScanSettings.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
+            builderScanSettings.setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
+            builderScanSettings.setNumOfMatches(ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT);
+            builderScanSettings.setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE);
+            builderScanSettings.setReportDelay(0);
         }
 
         public boolean isScanning() {
@@ -223,7 +264,9 @@ public class DeviceScanActivity extends ListActivity {
         public void startScanning() {
             synchronized (this) {
                 isScanning = true;
-                bluetoothAdapter.startLeScan(mLeScanCallback);
+
+                //bluetoothLeScanner.startScan(scanCallback);
+                bluetoothLeScanner.startScan(filter,builderScanSettings.build(),scanCallback);
                 start();
             }
         }
@@ -231,20 +274,20 @@ public class DeviceScanActivity extends ListActivity {
         public void stopScanning() {
             synchronized (this) {
                 isScanning = false;
-                bluetoothAdapter.stopLeScan(mLeScanCallback);
+                //bluetoothAdapter.stopLeScan(mLeScanCallback); //After API21 is deprecated
+                bluetoothLeScanner.stopScan(scanCallback);
             }
         }
 
         @SuppressWarnings("deprecation")
-		@Override
+        @Override
         public void run() {
             try {
                 while (true) {
                     synchronized (this) {
                         if (!isScanning)
                             break;
-
-                       // bluetoothAdapter.startLeScan(mLeScanCallback);
+                        //bluetoothLeScanner.startScan(scanCallback);
                     }
 
                     sleep(SCAN_PERIOD);
@@ -255,7 +298,7 @@ public class DeviceScanActivity extends ListActivity {
                 }
             } catch (InterruptedException ignore) {
             } finally {
-               // bluetoothAdapter.stopLeScan(mLeScanCallback);
+                // bluetoothAdapter.stopLeScan(mLeScanCallback);
             }
         }
     }

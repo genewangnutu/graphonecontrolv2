@@ -46,13 +46,16 @@ public class SimpleTabsActivity extends AppCompatActivity {
     public static BleService bleService;
     private String deviceAddress;
 
-    public static TextView address,state,communicate,test,m1t,m2t,m3t;
+    //object
+    public static TextView address,state,communicate,test,m1t,m2t,m3t,adc_voltage,click_ADC;
     public static Button m1button,m2button,m3button;
     public static int test_value=0;
     public static String s_address,s_state,s_communicate,s_testvalue;
     public static CircularSeekBar cbar;
+
+    //onclicklistenser lock
     public static boolean mode_b01=false,mode_b02=false,mode_b03=false,
-            forntmode_b01=false,forntmode_b02=false,forntmode_b03=false;
+            forntmode_b01=false,forntmode_b02=false,forntmode_b03=false,adc_lock=false;
 
     public static Date dt1 , dt2 ;
     public static String time_string;
@@ -61,6 +64,9 @@ public class SimpleTabsActivity extends AppCompatActivity {
     public static byte[] send= new byte[5];
     public static String progress_str=" 99%";
     public static boolean mode2_lock=false;
+
+    //get data filter
+    public boolean adc_data_approval =false;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -120,7 +126,9 @@ public class SimpleTabsActivity extends AppCompatActivity {
                 // Show all the supported services and characteristics on the user interface.
                 //displayGattServices(bleService.getSupportedGattServices());
             } else if (BleService.ACTION_DATA_AVAILABLE.equals(action)) {
-
+                if(adc_data_approval){
+                    adc_voltage.setText("");
+                }
             }
         }
 
@@ -199,11 +207,12 @@ public class SimpleTabsActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new OneFragment(), "HOME");
-        adapter.addFragment(new TwoFragment(), "TEST MODE");
-        adapter.addFragment(new ThreeFragment(), "MODE 1");
-        adapter.addFragment(new FourFragment(), "MODE 2");
-        adapter.addFragment(new FiveFragment(), "MODE 3");
-        //adapter.addFragment(new SixFragment(), "VOCAL CONTROL");
+        adapter.addFragment(new ADCFragment(), "ADC");
+        adapter.addFragment(new TwoFragment(), "PWM");
+        adapter.addFragment(new ThreeFragment(), "MODE1");
+        adapter.addFragment(new FourFragment(), "MODE2");
+        adapter.addFragment(new FiveFragment(), "MODE3");
+
         viewPager.setAdapter(adapter);
     }
 
@@ -236,12 +245,13 @@ public class SimpleTabsActivity extends AppCompatActivity {
         }
     }
 
-    public void switch_mode(int mode){
-
+    public static void instruction_mode(byte mode ,byte data){
+        byte [] send={mode,data};
+        SimpleTabsActivity.bleService.write_board(send,1);
     }
 
     private void vocal_verify(String vocal){
-        if(vocal.indexOf("開啟")!=-1 || vocal.indexOf("模式")!=-1){
+        if(vocal.indexOf("開啟")!=-1 || vocal.indexOf("模式")!=-1 && vocal.indexOf("關閉")==-1 && vocal.indexOf("關掉")==-1){
             if(vocal.indexOf("模式1")!=-1){
                 mode_b02=mode_b03=false;
 
@@ -345,6 +355,9 @@ public class SimpleTabsActivity extends AppCompatActivity {
             send[0] = (byte) 0xa1;
             bleService.write_board(send, 1);
 
+            if(ThreeFragment.view_lock)
+                ThreeFragment.mHandler.sendEmptyMessage(1);
+
             while (mode_b01) {
                 min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
                 sec=((int)(dt2.getTime()-dt1.getTime())/1000)%60;
@@ -373,6 +386,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
 
             if(ThreeFragment.view_lock)
                 ThreeFragment.mHandler.sendEmptyMessage(2);
+            instruction_mode((byte) 0x21 ,(byte)0x00);
             Log.d(TAG, "--front_mode1 Thread stop--");
         }
     }
@@ -385,6 +399,9 @@ public class SimpleTabsActivity extends AppCompatActivity {
             dt1=new Date();dt2=new Date();
             send[0]=(byte)0xa2;
             SimpleTabsActivity.bleService.write_board(send,1);
+
+            if(FourFragment.view_lock)
+                FourFragment.mHandler.sendEmptyMessage(1);
 
             while(mode_b02){
                 min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
@@ -423,6 +440,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
 
             if(FourFragment.view_lock)
                 FourFragment.mHandler.sendEmptyMessage(2);
+            instruction_mode((byte) 0x21 ,(byte)0x00);
             Log.d(TAG, "--front_mode2 Thread stop--");
         }
     }
@@ -434,6 +452,9 @@ public class SimpleTabsActivity extends AppCompatActivity {
             dt1=new Date();dt2=new Date();
             send[0]=(byte) 0xa3;
             bleService.write_board(send,1);
+
+            if(FiveFragment.view_lock)
+                FiveFragment.mHandler.sendEmptyMessage(1);
 
             while(mode_b03){
                 min=((int)(dt2.getTime()-dt1.getTime())/1000)/60;
@@ -459,6 +480,11 @@ public class SimpleTabsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
+            if(FiveFragment.view_lock)
+                FiveFragment.mHandler.sendEmptyMessage(2);
+            instruction_mode((byte) 0x21 ,(byte)0x00);
+            Log.d(TAG, "--front_mode3 Thread stop--");
         }
     }
 }

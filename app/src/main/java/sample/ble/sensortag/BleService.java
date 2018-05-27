@@ -52,7 +52,7 @@ public class BleService extends Service {
     //public byte a[]={0x21,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x21};
     public byte a[]={0x01};
     public byte b[]={0x18};
-    //public byte b[]={0x18,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x18};
+    public byte notify_open_lock[]={0x01,0x00};
     
     Context m;
     
@@ -369,26 +369,35 @@ public class BleService extends Service {
     	characteristic.setValue(b);
         gatt.writeCharacteristic(characteristic);
     }
-    
-    public void notify(byte [] write_data){
-    	service = gatt.getService(UUID.fromString(UUID_SERVICE));
+
+    public boolean open_notify(){
+
+        service = gatt.getService(UUID.fromString(UUID_SERVICE));
     	if(service==null){
     		Log.w(TAG, "gatt getService = null");
     	}
     	if(service.getCharacteristic(UUID.fromString(UUIDw_notify))==null){
     		Log.w(TAG, "gatt Service get Characteristic = null");
 		}
+
     	characteristic = service.getCharacteristic(UUID.fromString(UUIDw_notify));
     	if(characteristic==null){
     		Log.w(TAG, "gatt Service get Characteristic = null");
     	}
+
+        gatt.setCharacteristicNotification(characteristic, true);
+
     	Descriptor=characteristic.getDescriptor(UUID.fromString(notify_enable));
-    	
-    	Descriptor.setValue(write_data);
-    	
-    	
-    	gatt.setCharacteristicNotification(characteristic, true);
-    	gatt.writeDescriptor(Descriptor);
+        if(Descriptor==null){
+            Log.w(TAG, "open_notify() descriptor = null");return false;
+        }
+    	Descriptor.setValue(notify_open_lock);
+
+        if(gatt.writeDescriptor(Descriptor)){
+            Log.i(TAG, "open_notify sucess");
+        }
+
+        return true;
     }
     
     public void read() {
