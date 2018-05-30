@@ -19,3 +19,8 @@ version 2.0
 
 2.Add a data channel for notification
 
+--
+2018/05/30
+#version 2.0
+
+1.Fill up fragment ui 
