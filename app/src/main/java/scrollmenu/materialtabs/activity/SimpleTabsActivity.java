@@ -127,7 +127,9 @@ public class SimpleTabsActivity extends AppCompatActivity {
                 //displayGattServices(bleService.getSupportedGattServices());
             } else if (BleService.ACTION_DATA_AVAILABLE.equals(action)) {
                 if(adc_data_approval){
-                    adc_voltage.setText("");
+                    adc_voltage.setText(intent.getStringExtra(BleService.EXTRA_TEXT)+"v");
+                }else if(!adc_data_approval){
+                    adc_voltage.setText("ADC");
                 }
             }
         }

@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="scrollmenu.materialtabs.fragments.SixFragment">
+
+    <TextView
+        android:id="@+id/adc_voltage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADC"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/click_startADC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/adc_voltage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="63dp"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:text="Click to start detect" />
+
+</RelativeLayout>
