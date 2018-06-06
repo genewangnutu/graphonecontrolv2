@@ -55,7 +55,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
 
     //onclicklistenser lock
     public static boolean mode_b01=false,mode_b02=false,mode_b03=false,
-            forntmode_b01=false,forntmode_b02=false,forntmode_b03=false,adc_lock=false;
+            forntmode_b01=false,forntmode_b02=false,forntmode_b03=false,adc_lock=false,adc_read=false;
 
     public static Date dt1 , dt2 ;
     public static String time_string;
@@ -192,11 +192,13 @@ public class SimpleTabsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbindService(serviceConnection);
-        bleService = null;
 
         mode_b01=false;
         mode_b02=false;
         mode_b03=false;
+        adc_read=false;
+        bleService = null;
+
     }
 
     @Override

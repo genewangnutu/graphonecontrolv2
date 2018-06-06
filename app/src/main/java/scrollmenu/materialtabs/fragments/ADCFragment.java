@@ -53,10 +53,14 @@ public class ADCFragment extends Fragment{
                 if(SimpleTabsActivity.adc_lock){
                     mHandler.sendEmptyMessage(0);
                     SimpleTabsActivity.adc_lock=!SimpleTabsActivity.adc_lock;
-                    enable_notification();
+                    SimpleTabsActivity.adc_read=true;
+                    readADC ReadADC = new readADC();
+                    ReadADC.start();
+                    //enable_notification();
                 }else{
                     mHandler.sendEmptyMessage(1);
                     SimpleTabsActivity.adc_lock=!SimpleTabsActivity.adc_lock;
+                    SimpleTabsActivity.adc_read=false;
                 }
             }
         });
@@ -86,11 +90,21 @@ public class ADCFragment extends Fragment{
         }
     };
 
-    private Thread adcfragment_td = new Thread(){
+    private class readADC extends Thread{
         @Override
         public void run() {
             super.run();
 
+            while(SimpleTabsActivity.adc_read){
+
+                SimpleTabsActivity.bleService.read();
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-    };
+    }
 }

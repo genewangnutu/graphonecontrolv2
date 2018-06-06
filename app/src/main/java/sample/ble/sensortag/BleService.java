@@ -82,7 +82,7 @@ public class BleService extends Service {
     
     private static final String UUID_SERVICE = "0000fff0-0000-1000-8000-00805f9b34fb";
     private static final String UUID_WRITE = "0000fff3-0000-1000-8000-00805f9b34fb";
-    private static final String UUID_READ = "0000fff2-0000-1000-8000-00805f9b34fb";
+    private static final String UUID_READ = "0000fff5-0000-1000-8000-00805f9b34fb";
     private static final String UUIDw_notify = "0000fff4-0000-1000-8000-00805f9b34fb";
     private static final String notify_enable="00002902-0000-1000-8000-00805f9b34fb";
     
@@ -167,9 +167,9 @@ public class BleService extends Service {
         final byte[] data = characteristic.getValue();
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
-            for (byte byteChar : data)
-                stringBuilder.append(String.format("%02X ", byteChar));
-            //intent.putExtra(EXTRA_TEXT, new String(data) + "\n" + stringBuilder.toString());
+            for (int byteChar : data)
+                stringBuilder.append(Integer.toString(byteChar));
+
             intent.putExtra(EXTRA_TEXT, stringBuilder.toString());
         }
         /*final TiSensor<?> sensor = TiSensors.getSensor(characteristic.getService().getUuid().toString());
