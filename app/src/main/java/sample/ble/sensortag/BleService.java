@@ -53,6 +53,7 @@ public class BleService extends Service {
     public byte a[]={0x01};
     public byte b[]={0x18};
     public byte notify_open_lock[]={0x01,0x00};
+    public boolean Datalock_ADC = false;
     
     Context m;
     
@@ -78,11 +79,11 @@ public class BleService extends Service {
     public final static String EXTRA_SERVICE_UUID = INTENT_PREFIX+".EXTRA_SERVICE_UUID";
     public final static String EXTRA_CHARACTERISTIC_UUID = INTENT_PREFIX+".EXTRA_CHARACTERISTIC_UUI";
     public final static String EXTRA_DATA = INTENT_PREFIX+".EXTRA_DATA";
-    public final static String EXTRA_TEXT = INTENT_PREFIX+".EXTRA_TEXT";
+    public final static String DATA_ADC = INTENT_PREFIX+".EXTRA_TEXT";
     
     private static final String UUID_SERVICE = "0000fff0-0000-1000-8000-00805f9b34fb";
     private static final String UUID_WRITE = "0000fff3-0000-1000-8000-00805f9b34fb";
-    private static final String UUID_READ = "0000fff5-0000-1000-8000-00805f9b34fb";
+    private static final String UUID_READ = "0000fff2-0000-1000-8000-00805f9b34fb";
     private static final String UUIDw_notify = "0000fff4-0000-1000-8000-00805f9b34fb";
     private static final String notify_enable="00002902-0000-1000-8000-00805f9b34fb";
     
@@ -167,28 +168,18 @@ public class BleService extends Service {
         final byte[] data = characteristic.getValue();
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
-            for (int byteChar : data)
-                stringBuilder.append(Integer.toString(byteChar));
-
-            intent.putExtra(EXTRA_TEXT, stringBuilder.toString());
-        }
-        /*final TiSensor<?> sensor = TiSensors.getSensor(characteristic.getService().getUuid().toString());
-        if (sensor != null) {
-            sensor.onCharacteristicChanged(characteristic);
-            final String text = sensor.getDataString();
-            intent.putExtra(EXTRA_TEXT, text);
-            sendBroadcast(intent);
-        } else {
-            // For all other profiles, writes the data formatted in HEX.
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0) {
-                final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for (byte byteChar : data)
-                    stringBuilder.append(String.format("%02X ", byteChar));
-                //intent.putExtra(EXTRA_TEXT, new String(data) + "\n" + stringBuilder.toString());
-                intent.putExtra(EXTRA_TEXT, stringBuilder.toString());
+            if(Datalock_ADC){
+                stringBuilder.append(Integer.toString(data[0] & 0xff)+"\n");
+                stringBuilder.append(Integer.toString(data[1] & 0xff)+"V");
+                intent.putExtra(DATA_ADC, stringBuilder.toString());
             }
-        }*/
+            /*for (int loop=0;loop<data.length;loop++)
+                if(loop==0)
+                    stringBuilder.append(Integer.toString(data[loop] & 0xff));
+
+            intent.putExtra(EXTRA_TEXT, stringBuilder.toString());*/
+        }
+
         sendBroadcast(intent);
     }
 

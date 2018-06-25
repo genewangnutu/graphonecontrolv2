@@ -65,9 +65,6 @@ public class SimpleTabsActivity extends AppCompatActivity {
     public static String progress_str=" 99%";
     public static boolean mode2_lock=false;
 
-    //get data filter
-    public boolean adc_data_approval =false;
-
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -126,9 +123,11 @@ public class SimpleTabsActivity extends AppCompatActivity {
                 // Show all the supported services and characteristics on the user interface.
                 //displayGattServices(bleService.getSupportedGattServices());
             } else if (BleService.ACTION_DATA_AVAILABLE.equals(action)) {
-                if(adc_data_approval){
-                    adc_voltage.setText(intent.getStringExtra(BleService.EXTRA_TEXT)+"v");
-                }else if(!adc_data_approval){
+                String get_data=intent.getStringExtra(BleService.DATA_ADC);
+                Log.i(TAG,"get data"+get_data);
+                if(bleService.Datalock_ADC){
+                    adc_voltage.setText(get_data);
+                }else if(!bleService.Datalock_ADC){
                     adc_voltage.setText("ADC");
                 }
             }

@@ -50,17 +50,17 @@ public class ADCFragment extends Fragment{
             public void onClick(View v) {
                 mHandler.sendEmptyMessage(0);
 
-                if(SimpleTabsActivity.adc_lock){
+                if(!SimpleTabsActivity.adc_lock){
                     mHandler.sendEmptyMessage(0);
                     SimpleTabsActivity.adc_lock=!SimpleTabsActivity.adc_lock;
-                    SimpleTabsActivity.adc_read=true;
+                    SimpleTabsActivity.bleService.Datalock_ADC=true;
                     readADC ReadADC = new readADC();
                     ReadADC.start();
                     //enable_notification();
                 }else{
                     mHandler.sendEmptyMessage(1);
                     SimpleTabsActivity.adc_lock=!SimpleTabsActivity.adc_lock;
-                    SimpleTabsActivity.adc_read=false;
+                    SimpleTabsActivity.bleService.Datalock_ADC=false;
                 }
             }
         });
@@ -95,12 +95,12 @@ public class ADCFragment extends Fragment{
         public void run() {
             super.run();
 
-            while(SimpleTabsActivity.adc_read){
+            while(SimpleTabsActivity.bleService.Datalock_ADC){
 
                 SimpleTabsActivity.bleService.read();
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(800);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
