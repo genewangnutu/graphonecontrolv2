@@ -20,3 +20,8 @@ android project This project is for Magisci tech
 --
 
 1.Fill up fragment ui 
+
+2018/06/06  version 2.1
+--
+
+1.Add ADC reading thread 
