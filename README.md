@@ -25,3 +25,8 @@ android project This project is for Magisci tech
 --
 
 1.Add ADC reading thread 
+
+2018/06/25  version 2.2
+--
+1.Update new adc format
+2.change new architecture of adc reading function
