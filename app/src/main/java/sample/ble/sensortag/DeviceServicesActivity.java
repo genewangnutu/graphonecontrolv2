@@ -130,7 +130,7 @@ public class DeviceServicesActivity extends Activity {
                 // Show all the supported services and characteristics on the user interface.
                 //displayGattServices(bleService.getSupportedGattServices());
             } else if (BleService.ACTION_DATA_AVAILABLE.equals(action)) {
-               displayData(intent.getStringExtra(BleService.EXTRA_TEXT));
+               displayData(intent.getStringExtra(BleService.DATA_ADC));
                /*curDate2= new Date(System.currentTimeMillis());
                long diff=curDate2.getTime()-curDate1.getTime();
                displayData(diff+"");*/

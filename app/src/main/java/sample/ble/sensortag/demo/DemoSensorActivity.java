@@ -47,8 +47,8 @@ public abstract class DemoSensorActivity extends Activity {
                 //bleService.enableSensor(sensor, true);
             } else if (BleService.ACTION_DATA_AVAILABLE.equals(action)) {
                 final TiSensor<?> sensor = TiSensors.getSensor(serviceUuid);
-                final String text = intent.getStringExtra(BleService.EXTRA_TEXT);
-                onDataRecieved(sensor, text);
+                /*final String text = intent.getStringExtra(BleService.DATA_ADC);
+                onDataRecieved(sensor, text);*/
             }
         }
     };

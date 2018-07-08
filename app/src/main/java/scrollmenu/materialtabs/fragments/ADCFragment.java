@@ -100,7 +100,7 @@ public class ADCFragment extends Fragment{
                 SimpleTabsActivity.bleService.read();
 
                 try {
-                    Thread.sleep(800);
+                    Thread.sleep(700);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

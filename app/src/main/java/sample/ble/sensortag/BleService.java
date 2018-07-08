@@ -169,8 +169,15 @@ public class BleService extends Service {
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             if(Datalock_ADC){
-                stringBuilder.append(Integer.toString(data[0] & 0xff)+"\n");
-                stringBuilder.append(Integer.toString(data[1] & 0xff)+"V");
+                int getdata = (data[0] & 0xff)  + ((data[1] & 0xfff) << 8);
+
+                double adc_data = (double)getdata*2.5/(Math.pow(2,11)-1);
+                if(adc_data<1)
+                    adc_data=0;
+                //stringBuilder.append("Count: "+Integer.toString(data[2]));
+                stringBuilder.append(Double.toString(adc_data)+"V"+"\n"
+                        +"Count: "+Integer.toString(data[2]));
+                //stringBuilder.append("Count "+Integer.toString(data[1] & 0xff));
                 intent.putExtra(DATA_ADC, stringBuilder.toString());
             }
             /*for (int loop=0;loop<data.length;loop++)
