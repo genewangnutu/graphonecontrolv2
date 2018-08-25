@@ -30,3 +30,8 @@ android project This project is for Magisci tech
 --
 1.Update new adc format
 2.change new architecture of adc reading function
+
+2018/08/26  version 2.3
+--
+1.Update android api to ver26 
+
